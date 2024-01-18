@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package musicstream;
+
+service MusicStreaming {
+  rpc StreamMusic (StreamRequest) returns (stream StreamResponse);
+}
+
+message StreamRequest {
+  string playlistId = 1;
+}
+
+message StreamResponse {
+  bytes audioChunk = 1;
+}
