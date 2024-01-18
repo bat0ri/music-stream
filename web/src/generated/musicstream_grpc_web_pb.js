@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for helloworld
+ * @fileoverview gRPC-Web generated client stub for musicstream
  * @enhanceable
  * @public
  */
@@ -8,7 +8,7 @@
 // versions:
 // 	protoc-gen-grpc-web v1.5.0
 // 	protoc              v4.24.3
-// source: src/proto/hello.proto
+// source: musicstream.proto
 
 
 /* eslint-disable */
@@ -20,7 +20,7 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 const proto = {};
-proto.helloworld = require('./hello_pb.js');
+proto.musicstream = require('./musicstream_pb.js');
 
 /**
  * @param {string} hostname
@@ -30,7 +30,7 @@ proto.helloworld = require('./hello_pb.js');
  * @struct
  * @final
  */
-proto.helloworld.GreeterClient =
+proto.musicstream.MusicStreamingClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -56,7 +56,7 @@ proto.helloworld.GreeterClient =
  * @struct
  * @final
  */
-proto.helloworld.GreeterPromiseClient =
+proto.musicstream.MusicStreamingPromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -77,63 +77,58 @@ proto.helloworld.GreeterPromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.helloworld.HelloRequest,
- *   !proto.helloworld.HelloReply>}
+ *   !proto.musicstream.StreamRequest,
+ *   !proto.musicstream.StreamResponse>}
  */
-const methodDescriptor_Greeter_SayHello = new grpc.web.MethodDescriptor(
-  '/helloworld.Greeter/SayHello',
-  grpc.web.MethodType.UNARY,
-  proto.helloworld.HelloRequest,
-  proto.helloworld.HelloReply,
+const methodDescriptor_MusicStreaming_StreamMusic = new grpc.web.MethodDescriptor(
+  '/musicstream.MusicStreaming/StreamMusic',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.musicstream.StreamRequest,
+  proto.musicstream.StreamResponse,
   /**
-   * @param {!proto.helloworld.HelloRequest} request
+   * @param {!proto.musicstream.StreamRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.helloworld.HelloReply.deserializeBinary
+  proto.musicstream.StreamResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.helloworld.HelloRequest} request The
- *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!proto.musicstream.StreamRequest} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.helloworld.HelloReply)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.helloworld.HelloReply>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.musicstream.StreamResponse>}
  *     The XHR Node Readable Stream
  */
-proto.helloworld.GreeterClient.prototype.sayHello =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
-      '/helloworld.Greeter/SayHello',
+proto.musicstream.MusicStreamingClient.prototype.streamMusic =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/musicstream.MusicStreaming/StreamMusic',
       request,
       metadata || {},
-      methodDescriptor_Greeter_SayHello,
-      callback);
+      methodDescriptor_MusicStreaming_StreamMusic);
 };
 
 
 /**
- * @param {!proto.helloworld.HelloRequest} request The
- *     request proto
+ * @param {!proto.musicstream.StreamRequest} request The request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.helloworld.HelloReply>}
- *     Promise that resolves to the response
+ * @return {!grpc.web.ClientReadableStream<!proto.musicstream.StreamResponse>}
+ *     The XHR Node Readable Stream
  */
-proto.helloworld.GreeterPromiseClient.prototype.sayHello =
+proto.musicstream.MusicStreamingPromiseClient.prototype.streamMusic =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/helloworld.Greeter/SayHello',
+  return this.client_.serverStreaming(this.hostname_ +
+      '/musicstream.MusicStreaming/StreamMusic',
       request,
       metadata || {},
-      methodDescriptor_Greeter_SayHello);
+      methodDescriptor_MusicStreaming_StreamMusic);
 };
 
 
-module.exports = proto.helloworld;
+module.exports = proto.musicstream;
 

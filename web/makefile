@@ -1,13 +1,13 @@
 
 
 proto-gen-web: clear
-	protoc -I=. src/proto/hello.proto \
+	protoc -I=../protos/ ../protos/*.proto \
 	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \
-	--js_out=import_style=commonjs:. \
-	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+	--js_out=import_style=commonjs:./src/generated \
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:./src/generated
 
 proto-gen-web-ts: clear
-	protoc -I=. src/proto/hello.proto \
+	protoc -I=. src/proto/*.proto \
 	--plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts \
 	--ts_out=service=grpc-web:. \
 	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \
