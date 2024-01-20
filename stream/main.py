@@ -1,14 +1,14 @@
 import grpc
 from concurrent import futures
 from generated import musicstream_pb2, musicstream_pb2_grpc
-from time import sleep
+from pydub import AudioSegment
 
 
 
 class MusicStreamingServicer(musicstream_pb2_grpc.MusicStreamingServicer):
     def StreamMusic(self, request, context):
-        with open('aws/chipi-chapa.mp3', 'rb') as audio_file:
-            chunk_size = 4096
+        with open('aws/TRIVIATTA.mp3', 'rb') as audio_file:
+            chunk_size = 10*4096
             while True:
                 chunk = audio_file.read(chunk_size)
                 if not chunk:
@@ -24,6 +24,7 @@ def serve():
     server.start()
     server.wait_for_termination()
 
+
+
 if __name__ == '__main__':
     serve()
-
