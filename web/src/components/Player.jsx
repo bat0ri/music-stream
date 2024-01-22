@@ -7,17 +7,15 @@ import { StreamRequest } from '../generated/musicstream_pb';
 const MusicPlayer = () => {
   const client = new MusicStreamingClient('http://localhost:8080', null, null);
 
-  
-
   const audioContextRef = useRef(new window.AudioContext());
   const bufferQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
 
+  
   const playNextBuffer = () => {
     if (bufferQueueRef.current.length > 0) {
       const source = audioContextRef.current.createBufferSource();
-      const { audioBuffer, data } = bufferQueueRef.current.shift();
-      source.buffer = audioBuffer;
+      source.buffer = bufferQueueRef.current.shift();
       source.connect(audioContextRef.current.destination);
       source.onended = playNextBuffer;
       source.start();
@@ -26,24 +24,46 @@ const MusicPlayer = () => {
       isPlayingRef.current = false;
     }
   };
+  
+  
 
   const streamMusic = () => {
     const request = new StreamRequest();
     const call = client.streamMusic(request, {});
 
-    call.on('data', (response) => {
-      const data = response.getAudiochunk();
-      const dataUint = new Uint8Array(data);
+    
+  
+    const handleData = (response) => {
+        return new Promise(async (resolve, reject) => {
+          const dataUint = new Uint8Array(response.getAudiochunk());
+      
+          try {
+            const decodedData = await audioContextRef.current.decodeAudioData(dataUint.buffer);
+            bufferQueueRef.current.push(decodedData);
+            if (!isPlayingRef.current) {
+              playNextBuffer();
+            }
+            resolve(); 
+          } catch (error) {
+            console.error('Error decoding audio data:', error);
+            reject(error);
+          }
+        });
+      };
+       
+      
+    call.on('data', async (response) => {
+        await handleData(response);
+    });
+      
 
-      audioContextRef.current.decodeAudioData(dataUint.buffer, (audioBuffer) => {
-        bufferQueueRef.current.push({ audioBuffer, data });
-        
-        if (!isPlayingRef.current) {
-          playNextBuffer();
-        }
-      }, (error) => {
-        console.error('Error decoding audio data:', error);
-      });
+    call.on('end', () => {
+      console.log('Stream ended');
+    });
+
+    call.on('error', (err) => {
+      console.error('Stream error:', err);
+      isPlayingRef.current = false;
     });
   };
 
@@ -51,13 +71,15 @@ const MusicPlayer = () => {
     streamMusic();
   };
 
-
   const pauseClick = () => {
     audioContextRef.current.suspend();
   };
 
   const playClick = () => {
-    audioContextRef.current.resume();
+    audioContextRef.current.resume();    
+    if (!isPlayingRef.current) {
+        playNextBuffer();
+      }
   };
 
   return (
