@@ -7,7 +7,7 @@ from pydub import AudioSegment
 
 class MusicStreamingServicer(musicstream_pb2_grpc.MusicStreamingServicer):
     def StreamMusic(self, request, context):
-        with open('aws/TRIVIATTA.mp3', 'rb') as audio_file:
+        with open('aws/Krit.mp3', 'rb') as audio_file:
             chunk_size = 100*4096
             while True:
                 chunk = audio_file.read(chunk_size)
