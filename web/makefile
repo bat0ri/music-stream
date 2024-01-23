@@ -1,6 +1,7 @@
 
 
 proto-gen-web: clear
+<<<<<<< HEAD
 	protoc -I=../protos/ ../protos/*.proto \
 	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \
 	--js_out=import_style=commonjs:./src/generated \
@@ -8,6 +9,15 @@ proto-gen-web: clear
 
 proto-gen-web-ts: clear
 	protoc -I=. src/proto/*.proto \
+=======
+	protoc -I=. src/proto/hello.proto \
+	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \
+	--js_out=import_style=commonjs:. \
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+
+proto-gen-web-ts: clear
+	protoc -I=. src/proto/hello.proto \
+>>>>>>> 20f68ad77dbe777f424dbfe2255c976ae474cff9
 	--plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts \
 	--ts_out=service=grpc-web:. \
 	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \
