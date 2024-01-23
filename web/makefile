@@ -8,6 +8,7 @@ proto-gen-web: clear
 
 proto-gen-web-ts: clear
 	protoc -I=. src/proto/*.proto \
+
 	--plugin=protoc-gen-ts=node_modules/.bin/protoc-gen-ts \
 	--ts_out=service=grpc-web:. \
 	--plugin=protoc-gen-js=./node_modules/.bin/protoc-gen-js \

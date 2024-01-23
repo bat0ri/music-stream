@@ -2,7 +2,10 @@ static_resources:
   listeners:
     - name: listener_0
       address:
+
       # Порт который слушает
+
+
         socket_address: { address: 0.0.0.0, port_value: 8080 }
       filter_chains:
         - filters:
@@ -50,7 +53,9 @@ static_resources:
         endpoints:
           - lb_endpoints:
             - endpoint:
+
             # Порт сервера
+
                 address:
                   socket_address:
                     address: 0.0.0.0
