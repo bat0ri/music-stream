@@ -1,10 +1,11 @@
 import React from 'react';
-import GrpcComponent from './components/HelloName';
+import MusicPlayer from './components/Player';
+
 
 function App() {
   return (
     <div className="App">
-      <GrpcComponent />
+      <MusicPlayer />
     </div>
   );
 }
