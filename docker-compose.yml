@@ -2,13 +2,33 @@ version: '3'
 
 services:
 
-  envoy:
-    image: envoyproxy/envoy-dev:e4955aed5694f9935d674419dbb364e744f697b4
-    volumes:
-      - ./proxy/envoy.yaml:/etc/envoy/envoy.yaml
-    network_mode: host
+  #envoy:
+  #  image: envoyproxy/envoy-dev:e4955aed5694f9935d674419dbb364e744f697b4
+  #  volumes:
+  #    - ./proxy/envoy.yaml:/etc/envoy/envoy.yaml
+  #  network_mode: host
+
+  db:
+    image: postgres:alpine3.18
+    container_name: music_db
+    build:
+      context: .
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=music
+
 
   #server:
+  #  container_name: server
+  #  build: .
+  #  image: server
+  #  ports:
+  #    - "8000:8000"
+
+  #stream:
   #  build: ./stream
   #  image: stream
   #  ports:
