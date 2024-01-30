@@ -1,20 +1,19 @@
 import { makeAutoObservable } from 'mobx';
-import { useMutation } from '@apollo/client';
-import { LOGIN_USER } from '../mutations/user';
 
 
-class AuthStore {
+export default class AuthStore {
 
   isAuthenticated = false;
-  user = null;
 
   constructor() {
     makeAutoObservable(this);
+    const storedToken = localStorage.getItem('access');
+    if (storedToken) {
+      this.isAuthenticated = true;
+    }
   }
 
-  login = async (email, password) => {
-
-    const [loginUser] =  useMutation(LOGIN_USER);
+  async singIn (loginUser, email, password) {
 
     try {
         const { data } = await loginUser({
@@ -25,18 +24,14 @@ class AuthStore {
         });
         console.log("Вход выполнен", data)
         this.isAuthenticated = true;
-        this.user = data.login.email;
+        localStorage.setItem('access', data.login.token);
     } catch (error) {
         console.log(error.message);
     }
   };
 
-  logout = () => {
+  async logout () {
     this.isAuthenticated = false;
-    this.user = null;
+    localStorage.removeItem('access');
   };
-}
-
-const authStore = new AuthStore();
-
-export default authStore;
+};

@@ -1,8 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { MusicStreamingClient } from '../generated/musicstream_grpc_web_pb';
 import { StreamRequest } from '../generated/musicstream_pb';
+import { Context } from '..';
+import { useNavigate, Link } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+
 
 const MusicPlayer = () => {
+
+    const {store} = useContext(Context);
+    const navigate = useNavigate();
+
   const client = new MusicStreamingClient('http://localhost:8080', null, null);
 
   const audioContextRef = useRef(new window.AudioContext());
@@ -78,11 +86,25 @@ const MusicPlayer = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+        store.logout();
+        navigate('/login');
+    } catch (e) {
+        console.log(e);
+    }
+};
+
   return (
     <div>
       <button onClick={togglePlay}>{isPlaying ? 'Pause' : 'Play'}</button>
+        <div className="mt-4 text-center">
+            <button onClick={handleLogout} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'>
+                Выйти
+                </button>
+        </div>
     </div>
   );
 };
 
-export default MusicPlayer;
+export default observer(MusicPlayer);

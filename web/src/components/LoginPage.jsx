@@ -1,10 +1,18 @@
 import { useMutation} from '@apollo/client';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react';
+import { Context } from '..';
+import { observer } from 'mobx-react-lite';
 import { LOGIN_USER } from '../mutations/user';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useNavigate, Link } from 'react-router-dom';
+
 
 const LoginPage = () => {
+
+    const {store} = useContext(Context);
+
+    const navigate = useNavigate();
 
     // MUI-SnackBar для вывода ошибок
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -15,11 +23,11 @@ const LoginPage = () => {
         setSnackbarMessage(message);
         setSnackbarSeverity(severity);
         setSnackbarOpen(true);
-      };
+    };
 
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
-    const [loginUser] =  useMutation(LOGIN_USER);
+    const [loginUser] = useMutation(LOGIN_USER);
 
     const login = async(e) => {
         e.preventDefault();
@@ -28,36 +36,14 @@ const LoginPage = () => {
             handleSnackbar('Пароль должен содержать более 4 символов', 'error');
             return;
         }
-    
-        try {
-            const { data } = await loginUser({
-                variables: {
-                    email,
-                    password: pass
-                }
-            });
-            
-            console.log("Вход выполнен", data)
-            handleSnackbar('Успешный вход', 'success');
-            setEmail('');
-            setPass(''); 
-            1
-        } catch (error) {
-            
-            if (error.message === "PASS IS WRONG") {
-                handleSnackbar('Неправильный пароль', 'error');
 
-            } else if (error.message === "INVALID_EMAIL_FORMAT") {
-                handleSnackbar('Почта некорректна', 'error');
-            } else if (error.message === "USER IS NOT REGISTER") {
-                handleSnackbar("Пользователь не зарегистрирован", "warning")
-            }
-             else {
-                handleSnackbar(error.message, 'error');
-            }
-            
+        try {
+            await store.singIn(loginUser, email, pass);
+            navigate('/');
+        } catch(error) {
+            console.log(error.message);
         }
-    };
+    }
 
     return (
         <div className="bg-white dark:bg-gray-800 dark:text-white min-h-screen flex items-center justify-center ">
@@ -86,6 +72,9 @@ const LoginPage = () => {
               </button>
               
             </div>
+            <div className="mt-4 text-center">
+                <Link to="/singup" className="text-blue-500 hover:underline">Зарегистрироваться</Link>
+            </div>
           </form>
           <Snackbar
             open={snackbarOpen}
@@ -107,4 +96,4 @@ const LoginPage = () => {
       );
 }
 
-export default LoginPage
+export default observer(LoginPage);

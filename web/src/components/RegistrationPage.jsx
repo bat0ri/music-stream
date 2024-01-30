@@ -4,7 +4,7 @@ import { GET_ALL_USERS } from '../query/user';
 import { CREATE_USER } from '../mutations/user';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const Registration = () => {
@@ -108,6 +108,9 @@ const Registration = () => {
               >
                 Получить
               </button>
+              <div className="mt-4 text-center">
+                <Link to="/login" className="text-blue-500 hover:underline">Войти</Link>
+            </div>
             </div>
           </form>
           <div className="m-10 w-1/5 bg-white dark:bg-gray-700 p-8 rounded shadow-md">
