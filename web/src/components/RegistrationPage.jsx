@@ -57,23 +57,25 @@ const Registration = () => {
                     password: pass
                 }
             });
-            if (data.register === 'INVALID_EMAIL_FORMAT') {
-                handleSnackbar('Неправильный формат почты', 'error');
-            } else if (data.register === 'EMAIL_ALREADY_REGISTERED') {
-                handleSnackbar('Email уже зарегистрирован', 'error');
-            } else if (data.register === 'USER IS REGISTER') {
-                console.log("Пользователь успешно добавлен:", data);
-                handleSnackbar('Пользователь успешно добавлен', 'success');
-                setEmail('');
-                setPass(''); 
-            }
+
+            console.log("Пользователь успешно добавлен:", data);
+            handleSnackbar('Пользователь успешно добавлен', 'success');
+            setEmail('');
+            setPass(''); 
+
         } catch (error) {
-            console.error("Error while adding user:", error);
-            handleSnackbar('Ошибка при добавлении пользователя', 'error');
+            if (error.message === 'INVALID_EMAIL_FORMAT') {
+                handleSnackbar('Неправильный формат почты', 'error');
+            } else if (error.message === 'EMAIL_ALREADY_REGISTERED') {
+                handleSnackbar('Email уже зарегистрирован', 'error');
+            } else {
+                console.error("Error while adding user:", error);
+                handleSnackbar('Ошибка при добавлении пользователя', 'error');
+            }
         }
     };
     
-
+    
 
     return (
         <div className="bg-white dark:bg-gray-800 dark:text-white min-h-screen flex items-center justify-center ">

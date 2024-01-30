@@ -1,4 +1,8 @@
-import React from 'react'
+import { useMutation} from '@apollo/client';
+import React, { useEffect, useState } from 'react'
+import { LOGIN_USER } from '../mutations/user';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const LoginPage = () => {
 
@@ -12,31 +16,12 @@ const LoginPage = () => {
         setSnackbarSeverity(severity);
         setSnackbarOpen(true);
       };
-      
-    const [users, setUsers] = useState([]);
 
     const [email, setEmail] = useState('');
-    const [pass, setPass] = useState('')
+    const [pass, setPass] = useState('');
+    const [loginUser] =  useMutation(LOGIN_USER);
 
-    const { data, loading, error, refetch } = useQuery(GET_ALL_USERS);
-    const [newUser] =  useMutation(CREATE_USER);
-
-    useEffect(()=>{
-        if(!loading) {
-            setUsers(data.getUsers)
-        }
-    }, [data])
-
-    const getAll = e => {
-        e.preventDefault()
-        refetch()
-    }
-
-    if(loading) {
-        return <h1>Loading...</h1>
-    }
-
-    const addUser = async (e) => {
+    const login = async(e) => {
         e.preventDefault();
     
         if (pass.length <= 4) {
@@ -45,34 +30,39 @@ const LoginPage = () => {
         }
     
         try {
-            const { data } = await newUser({
+            const { data } = await loginUser({
                 variables: {
                     email,
                     password: pass
                 }
             });
-            if (data.register === 'INVALID_EMAIL_FORMAT') {
-                handleSnackbar('Неправильный формат почты', 'error');
-            } else if (data.register === 'EMAIL_ALREADY_REGISTERED') {
-                handleSnackbar('Email уже зарегистрирован', 'error');
-            } else if (data.register === 'USER IS REGISTER') {
-                console.log("Пользователь успешно добавлен:", data);
-                handleSnackbar('Пользователь успешно добавлен', 'success');
-                setEmail('');
-                setPass(''); 
-            }
+            
+            console.log("Вход выполнен", data)
+            handleSnackbar('Успешный вход', 'success');
+            setEmail('');
+            setPass(''); 
+            1
         } catch (error) {
-            console.error("Error while adding user:", error);
-            handleSnackbar('Ошибка при добавлении пользователя', 'error');
+            
+            if (error.message === "PASS IS WRONG") {
+                handleSnackbar('Неправильный пароль', 'error');
+
+            } else if (error.message === "INVALID_EMAIL_FORMAT") {
+                handleSnackbar('Почта некорректна', 'error');
+            } else if (error.message === "USER IS NOT REGISTER") {
+                handleSnackbar("Пользователь не зарегистрирован", "warning")
+            }
+             else {
+                handleSnackbar(error.message, 'error');
+            }
+            
         }
     };
-    
-
 
     return (
         <div className="bg-white dark:bg-gray-800 dark:text-white min-h-screen flex items-center justify-center ">
           <form className="w-1/3 bg-white dark:bg-gray-700 p-8 rounded shadow-md">
-            <h1 className='font-bold text-xl mb-8 dark:text-white'>Регистрация</h1>
+            <h1 className='font-bold text-xl mb-8 dark:text-white'>Вход</h1>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -89,27 +79,14 @@ const LoginPage = () => {
             />
             <div className="flex justify-between items-center">
               <button
-                onClick={(e) => addUser(e)}
+                onClick={(e)=> login(e)}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                Создать
+                Войти
               </button>
-              <button
-                onClick={(e) => getAll(e)}
-                className="bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Получить
-              </button>
+              
             </div>
           </form>
-          <div className="m-10 w-1/5 bg-white dark:bg-gray-700 p-8 rounded shadow-md">
-            <h1 className='font-bold mb-6'>Список пользаков</h1>
-            {users.map((user) => (
-              <div key={user.id} className="text-gray-300">
-                {user.email}
-              </div>
-            ))}
-          </div>
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={1000}
