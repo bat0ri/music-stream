@@ -1,18 +1,15 @@
 import React from 'react';
-<<<<<<<<< Temporary merge branch 1
-import GrpcComponent from './components/HelloName';
-=========
+
 import MusicPlayer from './components/Player';
->>>>>>>>> Temporary merge branch 2
+import Auth from './components/Auth';
+import ThemeSwitch from './themes';
+
 
 function App() {
   return (
-    <div className="App">
-<<<<<<<<< Temporary merge branch 1
-      <GrpcComponent />
-=========
-      <MusicPlayer />
->>>>>>>>> Temporary merge branch 2
+    <div className="App bg-white dark:bg-slate-800 h-screen">
+        <ThemeSwitch />
+        <Auth />
     </div>
   );
 }

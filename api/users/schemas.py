@@ -1,16 +1,25 @@
 import strawberry
+from pydantic import BaseModel, EmailStr
 from users.model import User
 import uuid
 from datetime import datetime
 
 
+class AuthInputBase(BaseModel):
+    email: EmailStr
+    password: str
+
+
 @strawberry.input
-class RegisterInput:
+class AuthInput:
     email: str
     password: str
 
-    def to_user(self):
-        return User(email=self.email, hash_password=self.password)
+
+@strawberry.type
+class LoginType:
+    email: str
+    token: str
 
 
 @strawberry.type

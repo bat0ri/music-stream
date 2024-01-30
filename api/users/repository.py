@@ -25,3 +25,11 @@ class UserRepository:
             query = select(User)
             result = await session.execute(query)
             return result.scalars().all()
+
+
+    @staticmethod
+    async def get_by_email(email: str):
+        async with db as session:
+            query = select(User).filter(User.email==email)
+            result = await session.execute(query)
+            return result.scalars().first()

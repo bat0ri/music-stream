@@ -1,17 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from users.mutation import Mutation
 from users.query import Query
-from users.router import router
 
 from strawberry.fastapi import GraphQLRouter
 import strawberry
 
 
-
-
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
 graphql_app = GraphQLRouter(schema)
@@ -23,5 +29,3 @@ app.include_router(graphql_app, prefix="/graphql")
 async def check():
     return {'status' : 200}
 
-
-app.include_router(router=router)
