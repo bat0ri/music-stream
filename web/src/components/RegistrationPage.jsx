@@ -7,7 +7,7 @@ import MuiAlert from '@mui/material/Alert';
 
 
 
-const Auth = () => {
+const Registration = () => {
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -19,7 +19,6 @@ const Auth = () => {
         setSnackbarOpen(true);
       };
       
-
     const [users, setUsers] = useState([]);
 
     const [email, setEmail] = useState('');
@@ -58,7 +57,6 @@ const Auth = () => {
                     password: pass
                 }
             });
-    
             if (data.register === 'INVALID_EMAIL_FORMAT') {
                 handleSnackbar('Неправильный формат почты', 'error');
             } else if (data.register === 'EMAIL_ALREADY_REGISTERED') {
@@ -74,7 +72,6 @@ const Auth = () => {
             handleSnackbar('Ошибка при добавлении пользователя', 'error');
         }
     };
-    
     
 
 
@@ -139,4 +136,4 @@ const Auth = () => {
       );      
 }
 
-export default Auth;
+export default Registration;

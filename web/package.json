@@ -31,8 +31,7 @@
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.9.1",
     "react-player": "^2.14.1",
-
-
+    "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "usehooks-ts": "^2.10.0",
